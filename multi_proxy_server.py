@@ -1,3 +1,10 @@
+"""
+================================ Acknowledgements ================================
+
+Code derived from the provided files and screenshots taken from TA(Zoe) during the lab session.
+
+"""
+
 #!/usr/bin/env python3
 import socket, time, sys
 from multiprocessing import Process
@@ -7,7 +14,6 @@ HOST = "localhost"
 PORT = 8001
 BUFFER_SIZE = 1024
 
-# TODO: getRemoteIP() method
 # Get IP
 def getRemoteIP(host):
     print(f'Getting IP for {host}')
@@ -20,7 +26,6 @@ def getRemoteIP(host):
     print (f'Ip address of {host} is {remote_ip}')
     return remote_ip
 
-# TODO: handleRequest() method
 # Send connections back to client
 def handleRequest(addr, conn):
 	print("Connected by ", addr)
@@ -31,13 +36,13 @@ def handleRequest(addr, conn):
 	conn.close()
 
 def main():
-	# TODO: Establish localhost, extern_host (google), port, buffer size
+	# Establish localhost, extern_host (google), port, buffer size
 	extern_host = "www.google.com"
 	port = 80
 
-	# Create socket
-	with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as proxy_start: # Establish "start" of proxy (connects to localhost)
-		# TODO: bind and set to listening mode
+	# Create socket and Establish "start" of proxy (connects to localhost)
+	with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as proxy_start:
+		# Bind and set to listening mode
 		print("Starting proxy server")
 
 		# Allow reused addresses, bind and set to listening mode
@@ -46,13 +51,14 @@ def main():
 		proxy_start.listen(1)
 
 		while True:
-			# TODO: accept incoming connections from proxy_start, print information about connection
+			# Accept incoming connections from proxy_start, print information about connection
 			# Connect proxy_start
 			conn, addr = proxy_start.accept()
 			print("Connected by ", addr)
 
-			with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as proxy_end: # Establish "end" of proxy (connects to google)
-				# TODO: get remote IP of google, connect proxy_end to it
+			# Establish "end" of proxy (connects to google)
+			with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as proxy_end: 
+				# Get remote IP of google, connect proxy_end to it
 				print("Connecting to Google")
 				remote_ip = getRemoteIP(extern_host)
 
@@ -75,14 +81,14 @@ def main():
 
 				# Now for the multiprocessing...
 
-				# TODO: allow for multiple connections with a Process daemon
+				# Allow for multiple connections with a Process daemon
 				# Make sure to set target = handleRequest when creating the Process
 				p = Process(target=handleRequest, args=(addr, conn))
 				p.daemon = True
 				p.start()
 				print("Started process ", p)
 
-			# TODO: close the connection!
+			# Close the connection!
 			conn.close()
 
 if __name__ == "__main__":
